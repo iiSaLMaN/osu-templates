@@ -18,8 +18,8 @@ var templateSolutions = GetFiles(rootDirectory + "/templates/**/*.sln");
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("Compile")
-    .Does(() => {
-        DotNetCoreBuild(templateSolutions, new DotNetCoreBuildSettings {
+    .DoesForEach(templateSolutions, (solution) => {
+        DotNetCoreBuild(solution.Path.FullPath, new DotNetCoreBuildSettings {
             Configuration = configuration,
         });
     });
@@ -40,8 +40,8 @@ Task("Test")
 Task("InspectCode")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Compile")
-    .Does(() => {
-        InspectCode(templateSolutions, new InspectCodeSettings {
+    .DoesForEach(templateSolutions, (solution) => {
+        InspectCode(solution.Path.FullPath, new InspectCodeSettings {
             CachesHome = "inspectcode",
             OutputFile = "inspectcodereport.xml",
         });
