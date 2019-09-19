@@ -11,7 +11,6 @@ var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Release");
 
 var rootDirectory = new DirectoryPath("..");
-var solution = rootDirectory.CombineWithFilePath("osu.sln");
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASKS
@@ -19,7 +18,9 @@ var solution = rootDirectory.CombineWithFilePath("osu.sln");
 
 Task("Compile")
     .Does(() => {
-        DotNetCoreBuild(solution.FullPath, new DotNetCoreBuildSettings {
+        var templateSolutions = GetFiles(rootDirectory + "/templates/**/*.sln");
+        
+        DotNetCoreBuild(templateSolutions, new DotNetCoreBuildSettings {
             Configuration = configuration,
         });
     });
