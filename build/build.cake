@@ -41,7 +41,7 @@ Task("InspectCode")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Compile")
     .DoesForEach(templateSolutions, (solution) => {
-        InspectCode(solution.FullPath, new InspectCodeSettings {
+        InspectCode(solution, new InspectCodeSettings {
             CachesHome = "inspectcode",
             OutputFile = "inspectcodereport.xml",
         });
