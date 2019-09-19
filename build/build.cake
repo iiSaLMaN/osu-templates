@@ -11,6 +11,7 @@ var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Release");
 
 var rootDirectory = new DirectoryPath("..");
+var templateSolutions = GetFiles(rootDirectory + "/templates/**/*.sln");
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASKS
@@ -18,8 +19,6 @@ var rootDirectory = new DirectoryPath("..");
 
 Task("Compile")
     .Does(() => {
-        var templateSolutions = GetFiles(rootDirectory + "/templates/**/*.sln");
-        
         DotNetCoreBuild(templateSolutions, new DotNetCoreBuildSettings {
             Configuration = configuration,
         });
@@ -42,7 +41,7 @@ Task("InspectCode")
     .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Compile")
     .Does(() => {
-        InspectCode(solution, new InspectCodeSettings {
+        InspectCode(templateSolutions, new InspectCodeSettings {
             CachesHome = "inspectcode",
             OutputFile = "inspectcodereport.xml",
         });
